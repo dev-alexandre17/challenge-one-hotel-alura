@@ -17,7 +17,6 @@ public class MainPanel extends JFrame {
 
     private JLabel textCopyrightLabel;
     private JLabel backgroundCopyrightLabel;
-    private JLabel exitLabel;
 
     public MainPanel() {
         super("Menu");
@@ -64,10 +63,6 @@ public class MainPanel extends JFrame {
         return new ImageIcon("src/assets/img/backgroundCopyright.png");
     }
 
-    private ImageIcon loadExitImage() throws IOException {
-        return new ImageIcon("src/assets/img/saida.png");
-    }
-
     private ImageIcon editBackgroundImage() throws IOException {
         Image editBackgroundImage = loadBackgroundImage().getImage();
         Image scaledBackgroundImage = editBackgroundImage.getScaledInstance(800, 750,
@@ -90,7 +85,6 @@ public class MainPanel extends JFrame {
             hotelLabel = new JLabel(loadHotelImage());
             loginLabel = new JLabel(loadLoginImage());
             backgroundCopyrightLabel = new JLabel(editBackgroundCopyrightImage());
-            exitLabel = new JLabel(loadExitImage());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o componente: "
                     + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -130,11 +124,6 @@ public class MainPanel extends JFrame {
         c.gridy = 6;
         c.insets = new Insets(0,0,0,0);
         mainPanel.add(backgroundCopyrightLabel, c);
-
-        c.gridx = 0;
-        c.gridy = 7;
-        c.insets = new Insets(-200, 0, 0, -800);
-        mainPanel.add(exitLabel, c);
 
         add(mainPanel);
 
