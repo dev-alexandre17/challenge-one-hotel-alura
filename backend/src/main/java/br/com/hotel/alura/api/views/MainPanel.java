@@ -2,6 +2,8 @@ package br.com.hotel.alura.api.views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class MainPanel extends JFrame {
@@ -18,12 +20,16 @@ public class MainPanel extends JFrame {
     private JLabel textCopyrightLabel;
     private JLabel backgroundCopyrightLabel;
 
+    private JFrame frame;
+
     public MainPanel() {
         super("Menu");
 
         editFrame();
 
         addComponents();
+
+        eventFrame();
 
         editDimensionFrame();
 
@@ -126,6 +132,22 @@ public class MainPanel extends JFrame {
         mainPanel.add(backgroundCopyrightLabel, c);
 
         add(mainPanel);
+
+    }
+
+    private void eventFrame() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int option = JOptionPane.showConfirmDialog(frame, "Deseja fechar a aplicação?",
+                        "Messagem de confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    e.getWindow().dispose();
+                } else {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
 
     }
 
