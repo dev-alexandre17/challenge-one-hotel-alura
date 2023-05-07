@@ -2,6 +2,8 @@ package br.com.hotel.alura.api.views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -32,6 +34,8 @@ public class MainPanel extends JFrame {
         eventFrame();
 
         editDimensionFrame();
+
+        changeFrame();
 
     }
 
@@ -149,6 +153,26 @@ public class MainPanel extends JFrame {
             }
         });
 
+    }
+
+    private void changeFrame() {
+        loginLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                loginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                loginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                LoginPanel loginPanel = new LoginPanel();
+                dispose();
+            }
+        });
     }
 
     private void editDimensionFrame() {
