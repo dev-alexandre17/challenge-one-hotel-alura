@@ -25,7 +25,7 @@ public class MainPanel extends JFrame {
     private JFrame frame;
 
     public MainPanel() {
-        super("Menu");
+        super("Tela inicial");
 
         editFrame();
 
@@ -69,7 +69,7 @@ public class MainPanel extends JFrame {
         return new ImageIcon("src/assets/img/login.png");
     }
 
-    private ImageIcon loadbackgroundCopyrightImage() throws IOException {
+    private ImageIcon loadBackgroundCopyrightImage() throws IOException {
         return new ImageIcon("src/assets/img/backgroundCopyright.png");
     }
 
@@ -82,7 +82,7 @@ public class MainPanel extends JFrame {
     }
 
     private ImageIcon editBackgroundCopyrightImage() throws IOException {
-        Image editBackgroundCopyrightImage = loadbackgroundCopyrightImage().getImage();
+        Image editBackgroundCopyrightImage = loadBackgroundCopyrightImage().getImage();
         Image scaledBackgroundCopyright = editBackgroundCopyrightImage.getScaledInstance(1000, 40,
                 Image.SCALE_SMOOTH);
         ImageIcon scaledBackgroundCopyrightIcon = new ImageIcon(scaledBackgroundCopyright);
