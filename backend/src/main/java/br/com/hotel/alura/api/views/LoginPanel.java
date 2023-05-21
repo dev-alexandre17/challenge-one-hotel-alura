@@ -3,7 +3,10 @@ package br.com.hotel.alura.api.views;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.Base64;
 
 public class LoginPanel extends JFrame {
 
@@ -16,15 +19,21 @@ public class LoginPanel extends JFrame {
     private JTextField textFieldLogin;
     private JPasswordField textFieldPassword;
     private JButton signIn;
+    private JFrame frame;
+    private static final String API_URL = "http://localhost:8080/desenvolvedores/login";
 
     public LoginPanel() {
         super("Login");
 
         editFrame();
 
+        eventFrame();
+
         addComponents();
 
         editDimensionFrame();
+
+        eventButton();
 
     }
 
@@ -64,7 +73,7 @@ public class LoginPanel extends JFrame {
 
     private JPasswordField createTextFieldPassword() {
         textFieldPassword = new JPasswordField(25);
-        Border borderPersonalized = BorderFactory.createMatteBorder(0,  0, 1, 0, Color.decode("#007FFF"));
+        Border borderPersonalized = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#007FFF"));
         textFieldPassword.setBorder(borderPersonalized);
         return textFieldPassword;
     }
@@ -150,6 +159,88 @@ public class LoginPanel extends JFrame {
 
     }
 
+    private void eventFrame() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int option = JOptionPane.showConfirmDialog(frame, "Deseja fechar a aplicação?",
+                        "Messagem de confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    e.getWindow().dispose();
+                } else {
+                    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
+    }
+
+    private void eventButton() {
+        signIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = textFieldLogin.getText();
+                String password = new String(textFieldPassword.getPassword());
+
+                try {
+                    URL url = new URL(API_URL);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    connection.setDoOutput(true);
+
+                    String credentials = name + ":" + password;
+                    String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes("utf-8"));
+                    connection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
+
+                    String jsonInputString = "{\"name\": \"" + name + "\", \"password\": \"" + password + "\"}";
+
+                    try (OutputStream outputStream = connection.getOutputStream()) {
+                        byte[] input = jsonInputString.getBytes("utf-8");
+                        outputStream.write(input, 0, input.length);
+                    }
+
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                            "utf-8"))) {
+                        StringBuilder response = new StringBuilder();
+                        String responseLine;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            System.out.println(response.toString());
+                            changeFrame();
+                            dispose();
+                        } else if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                            System.out.println(response.toString());
+                            JOptionPane.showMessageDialog(LoginPanel.this,
+                                    "Credenciais inválidas");
+                        }
+                    }
+
+                    connection.disconnect();
+
+                } catch (ProtocolException ex) {
+                    throw new RuntimeException(ex);
+                } catch (MalformedURLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    private static void changeFrame() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                MenuPanel menuPanel = new MenuPanel();
+            }
+        });
+    }
+
     private void editDimensionFrame() {
         setPreferredSize(new Dimension(950, 675));
         pack();
@@ -162,3 +253,5 @@ public class LoginPanel extends JFrame {
     }
 
 }
+
+
